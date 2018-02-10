@@ -22,8 +22,7 @@ library(survminer) # only if plotting data afterwards
 library(foreach)
 library(doParallel)
 
-source_https("https://github.com/utnesp/parallell_functions/blob/master/R/coxph.parallell")
-
+source_https("https://raw.githubusercontent.com/utnesp/parallell_functions/master/R/coxph.parallell")
 ```
 
 The coxph.parallell function is as follows:
