@@ -21,11 +21,17 @@ library(ggplot2) # only if plotting data afterwards
 library(survminer) # only if plotting data afterwards
 library(foreach)
 library(doParallel)
+
+source_https("https://github.com/utnesp/parallell_functions/blob/master/R/coxph.parallell")
+
 ```
 
 The coxph.parallell function is as follows:
+
 coxph.parallell <- function(df, time.event.data, var.list = NULL, file = "test.txt", no_cores = "")
-input df is a data.table with gene in rows and samples in col. first col has to contain name of gene. var.list is extracted from first column
+
+input df is a data.table with gene in rows and samples in col. first col has to contain name of gene. 
+var.list is extracted from first column
 ```R
 > head(df)
 var     s1  s2  s3
