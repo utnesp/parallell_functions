@@ -38,8 +38,9 @@ gene_1  1   0   1
 gene_2  1   0   1
 gene_3  1   1   1
 ```
+The df can also contain continous values
 
-time.event.data is data.frame with cols binary data (event) in col1 and time in col2. The row order has to match col order in df
+time.event.data is data.frame / data.table with cols binary data (event) in col1 and time in col2. The row order has to match col order in df
 ```R
 > head(time.event.data)
     event   time
