@@ -1,8 +1,6 @@
 coxph.parallell <- function(df, time.event.data, var.list = NULL, file = "test.txt", no_cores = "") {
     start = Sys.time()
     
-    # file = "/Users/put001/Desktop/bcf/test.txt"
-    
     colnames(time.event.data) <- c("event", "time")
     colnames(df)[1] <- "var"
     setkey(df, var)
@@ -126,5 +124,4 @@ coxph.parallell <- function(df, time.event.data, var.list = NULL, file = "test.t
     end = Sys.time()
     time = round((end - start), 2)
     cat(paste("\nFinished in", time, units(time)))
-
 }
