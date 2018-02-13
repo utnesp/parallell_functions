@@ -57,6 +57,10 @@ coxph.parallell <- function(df, time.event.data, var.list = NULL, file = "test.t
                 CI.lower = round(s$conf.int[3],2), 
                 CI.upper = round(s$conf.int[4],2))
             
+            # if var is continous we removed the number of yes's and no's
+            if (length(table(unlist(t1))) != 2) res$yes <- NULL
+            if (length(table(unlist(t1))) != 2) res$no <- NULL
+            
             cat(unlist(res), sep ="\t", file = paste(file, z, "temp.txt", sep = "_"), append = T) # add tab and newline, then append to file
             cat("", sep ="\n", file = paste(file, z, "temp.txt", sep = "_"), append = T) # add tab and newline, then append to file
                  }
@@ -97,6 +101,10 @@ coxph.parallell <- function(df, time.event.data, var.list = NULL, file = "test.t
                 concordance.se = round(s$concordance[2], 2),
                 CI.lower = round(s$conf.int[3],2), 
                 CI.upper = round(s$conf.int[4],2))
+                
+            # if var is continous we removed the number of yes's and no's
+            if (length(table(unlist(t1))) != 2) res$yes <- NULL
+            if (length(table(unlist(t1))) != 2) res$no <- NULL
             
             cat(unlist(res), sep ="\t", file = file.rem, append = T) # add tab and newline, then append to file
             cat("", sep ="\n", file = file.rem, append = T) # add tab and newline, then append to file
