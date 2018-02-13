@@ -37,7 +37,8 @@ coxph.parallell <- function(df, time.event.data, var.list = NULL, file = "test.t
             colnames(survdata) <- c("event", "time", "var")
             
             res.cox <- coxph(Surv(time, event) ~ var, data = survdata, na.action = na.omit)
-    
+            chi.sq.p <- cox.zph(res.cox) # test the proportional hazards assumption of cox regression
+            
             s <- summary(res.cox)
             
             res <- list(var=name, 
@@ -55,7 +56,8 @@ coxph.parallell <- function(df, time.event.data, var.list = NULL, file = "test.t
                 concordance = round(s$concordance[1], 2),
                 concordance.se = round(s$concordance[2], 2),
                 CI.lower = round(s$conf.int[3],2), 
-                CI.upper = round(s$conf.int[4],2))
+                CI.upper = round(s$conf.int[4],2),
+                chi.sq.p = signif(chi.sq.p$table[3], 3))
             
             # if var is continous we removed the number of yes's and no's
             if (length(table(unlist(t1))) != 2) res$yes <- NULL
@@ -82,7 +84,7 @@ coxph.parallell <- function(df, time.event.data, var.list = NULL, file = "test.t
             colnames(survdata) <- c("event", "time", "var")
             
             res.cox <- coxph(Surv(time, event) ~ var, data = survdata, na.action = na.omit)
-    
+            chi.sq.p <- cox.zph(res.cox) # test the proportional hazards assumption of cox regression
             s <- summary(res.cox)
             
             res <- list(var=name, 
@@ -100,7 +102,9 @@ coxph.parallell <- function(df, time.event.data, var.list = NULL, file = "test.t
                 concordance = round(s$concordance[1], 2),
                 concordance.se = round(s$concordance[2], 2),
                 CI.lower = round(s$conf.int[3],2), 
-                CI.upper = round(s$conf.int[4],2))
+                CI.upper = round(s$conf.int[4],2),
+                chi.sq.p = signif(chi.sq.p$table[3], 3)
+                )
                 
             # if var is continous we removed the number of yes's and no's
             if (length(table(unlist(t1))) != 2) res$yes <- NULL
