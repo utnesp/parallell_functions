@@ -25,6 +25,7 @@ library(doParallel)
 source_https("https://raw.githubusercontent.com/utnesp/parallell_functions/master/R/coxph.parallell")
 ```
 
+# coxph.parallell
 The coxph.parallell function is as follows:
 
 coxph.parallell <- function(df, time.event.data, var.list = NULL, file = "test.txt", no_cores = "")
