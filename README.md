@@ -51,3 +51,25 @@ s3  1       1400
 
 The var.list is set to NULL by default, meaning that the first column in df will be used as variables. The function writes to a number of temporary files, and when done, 
 concatenates the files to the file specified in file argument. The function will use all.cores - 1 if not specified.
+
+Plot data using the plot.surv function
+```R
+plot.surv(genename, time.event.data, df)
+```
+
+If you also know which sample are e.g. highrisk, then you can subset your data in the above two functions
+```R
+> head(clinicalData)
+    highrisk
+s1  1       
+s2  0       
+s3  1       
+
+coxph.parallell(df, time.event.data, sub.idx = which(SEQC.clinicalData$highrisk == 1), file = "res.txt")
+res <- fread("res.txt")
+
+plot.surv(genename, time.event.data, df, sub.idx = which(SEQC.clinicalData$highrisk == 1))
+```
+
+
+
