@@ -1,5 +1,13 @@
-coxph.parallell <- function(df, time.event.data, var.list = NULL, file = "test.txt", no_cores = "") {
+# input df is a data.table with gene in rows and samples in col. first col has to contain name of gene. var.list is extracted from first column
+# time.event.data is data.frame with cols binary data (event) in col1 and time in col2. The row order has to match col order in df
+# sub.idx has to be subset containg index on samples to subset on (e.g. 1,3,5). Example which(type == "highrisk")
+coxph.parallell <- function(df, time.event.data, var.list = NULL, file = "test.txt", sub.idx = NULL, no_cores = "") {
     start = Sys.time()
+    
+     if (!is.null(sub.idx)) {
+        df <- df[, c(1, sub.idx+1), with = F]
+        time.event.data <- time.event.data[sub.idx, ]
+    }
     
     colnames(time.event.data) <- c("event", "time")
     colnames(df)[1] <- "var"
@@ -136,4 +144,36 @@ coxph.parallell <- function(df, time.event.data, var.list = NULL, file = "test.t
     end = Sys.time()
     time = round((end - start), 2)
     cat(paste("\nFinished in", time, units(time)))
+}
+
+
+plot.surv <- function(genename, clindata, counts, sub.idx = NULL) {
+    
+    if (!is.null(sub.idx)) {
+        counts <- counts[, c(1, sub.idx+1), with = F]
+        clindata <- clindata[sub.idx, ]
+    }
+    
+    
+    colnames(counts)[1] <- "ensembl_gene_id"
+    survdata <- cbind(clindata, t(counts[counts$ensembl_gene_id == hugo2ensg(genename)[1,2], 2:ncol(counts)]))
+    colnames(survdata) <- c("sbin", "time", "var")
+    cl <-  K_means_clustering(survdata[,3], 2)
+    survdata <- cbind(survdata[order(survdata[,3]), ], cl[order(cl[,1]), "fit.cluster"])
+    colnames(survdata)[4] <- "bin"
+    if(mean(unlist(survdata[survdata$bin == 1, "var"])) > mean(unlist(survdata[survdata$bin == 2, "var"]))) {
+        survdata$bin <- gsub("1", "HIGH", survdata$bin) 
+        survdata$bin <- gsub("2", "LOW", survdata$bin)
+    } else {
+        survdata$bin <- gsub("1", "LOW", survdata$bin) 
+        survdata$bin <- gsub("2", "HIGH", survdata$bin)
+}
+
+    survdata$bin <- factor(survdata$bin, levels = c("LOW", "HIGH"))
+    print(table(survdata$bin))
+    fit <- survfit(Surv(time, sbin) ~ bin, data = survdata, na.action = na.omit)
+    
+    print(coxph(Surv(time, sbin) ~ bin, data = survdata, na.action = na.omit))
+    
+    ggsurvplot(fit, combine = F, censor = FALSE, palette = "jco", font.main = 18, font.x = 18, font.y = 18, font.tickslab = 18, font.legend = 18, legend = "bottom") # + ggtitle(paste(name, ", pvalue = ", res$p, ", hazard ratio = ", res$hazard.ratio, ", conf = ", paste(res$CI.lower, ",", res$CI.upper, sep = ""), sep = ""))
 }
